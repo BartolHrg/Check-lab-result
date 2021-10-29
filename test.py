@@ -5,16 +5,17 @@
 # EDIT this
 # no need to edit anything else
 using_python = True;   # did you write lab using python
-test = "./test/";       # folder that contains .in and .out files in itself or its subfolders
+test = "../lab 1 easy/test/";       # folder that contains .in and .out files in itself or its subfolders
 if not using_python:
-    exe  = './a.exe';   # path to .exe    can be anything if     using_python
+    exe  = '../lab 1 easy/a.exe';   # path to .exe    can be anything if     using_python
 else:
-    exe  = './a.py' ;   # path to .py     can be anything if not using_python
+    exe  = './testtesta.py' ;   # path to .py     can be anything if not using_python
 pass;
 in_ext  = '.in' ;       # extension for 'in' files
 out_ext = '.out';       # extension for their 'out' files
 my_ext  = '.my' ;       # extension for files that program writes to
 err_ext = ".err";       #
+start_shell_command = "cmd /c ";
 
 # that is an example for the following structure
 # + .
@@ -74,9 +75,9 @@ for folder, _, files in w:
     pass;
     
     if not using_python:
-        cmd = 'cmd /c ' + f'"{exe}" < "{fin}" > "{fmy}" 2> "{ferr}"';
+        cmd = start_shell_command +         f'"{exe}" < "{fin}" > "{fmy}" 2> "{ferr}"';
     else:
-        cmd = 'py ' + f'"{exe}" < "{fin}" > "{fmy}" 2> "{ferr}"';
+        cmd = start_shell_command + 'py ' + f'"{exe}" < "{fin}" > "{fmy}" 2> "{ferr}"';
     pass;
 
     if os.system(cmd) == 0:
