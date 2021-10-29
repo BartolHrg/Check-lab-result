@@ -26,22 +26,25 @@ err_ext = ".err";					# errors
 
 # that is an example for the following structure
 # + .
-# | a.exe
 # | + test
-# | | + testni primjeri 1
-# | | | + test01
-# | | | | test01.in
-# | | | | test01.out
-# | | | + test02
-# | | | | test02.in
-# | | | | test02.out
-# | | + testni primjeri 2
-# | | | + test01
-# | | | | test01.in
-# | | | | test01.out
-# | | | + test02
-# | | | | test02.in
-# | | | | test02.out
+# | | test.py (this file)
+# | + lab 1 easy
+# | | a.exe
+# | | + test
+# | | | + testni primjeri 1
+# | | | | + test01
+# | | | | | test01.in
+# | | | | | test01.out
+# | | | | + test02
+# | | | | | test02.in
+# | | | | | test02.out
+# | | | + testni primjeri 2
+# | | | | + test01
+# | | | | | test01.in
+# | | | | | test01.out
+# | | | | + test02
+# | | | | | test02.in
+# | | | | | test02.out
 
 
 
