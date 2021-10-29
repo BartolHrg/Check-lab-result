@@ -1,21 +1,28 @@
 #!/usr/bin/env python
 
+import sys, os, subprocess;
+
 # compile lab before using this (except if you use python)
 
 # EDIT this
 # no need to edit anything else
-using_python = True;   # did you write lab using python
-test = "../lab 1 easy/test/";       # folder that contains .in and .out files in itself or its subfolders
+test = "../lab 1 easy/test/";		# folder that contains .in and .out files in itself or its subfolders
+
+using_python = False;				# did you write lab in python
 if not using_python:
-    exe  = '../lab 1 easy/a.exe';   # path to .exe    can be anything if     using_python
+    exe  = '../lab 1 easy/a.exe';	# path to .exe    can be anything if     using_python
+    exe = os.path.abspath(exe);
+    args = [exe];
 else:
-    exe  = './testtesta.py' ;   # path to .py     can be anything if not using_python
+    exe  = './testtest.py' ;		# path to .py     can be anything if not using_python
+    exe = os.path.abspath(exe);
+    args = ['py', exe];
 pass;
-in_ext  = '.in' ;       # extension for 'in' files
-out_ext = '.out';       # extension for their 'out' files
-my_ext  = '.my' ;       # extension for files that program writes to
-err_ext = ".err";       #
-start_shell_command = "cmd /c ";
+
+in_ext  = '.in' ;					# extension for 'in' files
+out_ext = '.out';					# extension for their 'out' files
+my_ext  = '.my' ;					# extension for files that program writes to
+err_ext = ".err";					# errors
 
 # that is an example for the following structure
 # + .
@@ -39,10 +46,11 @@ start_shell_command = "cmd /c ";
 
 
 
-import sys, os;
 
 test = os.path.abspath(test);
 exe = os.path.abspath(exe);
+
+
 w = os.walk(test);
 next(w);
 
@@ -73,27 +81,23 @@ for folder, _, files in w:
         ferr = fmy + err_ext;
         fmy += my_ext;
     pass;
-    
-    if not using_python:
-        cmd = start_shell_command +         f'"{exe}" < "{fin}" > "{fmy}" 2> "{ferr}"';
-    else:
-        cmd = start_shell_command + 'py ' + f'"{exe}" < "{fin}" > "{fmy}" 2> "{ferr}"';
+
+    with open(fin) as ffin, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
+        if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr).returncode != 0:
+            print("couldn't execute, see", ferr);
+            couldnt_execute += 1;
+            continue;
+        pass;
     pass;
 
-    if os.system(cmd) == 0:
-        count += 1;
-        with open(fout) as ffout:
-            with open(fmy) as ffmy:
-                t1 = ffout.read(); t2 = ffmy.read();
-                print(t1 == t2, fin, sep='\t');
-                if t1 == t2:
-                    correct += 1;
-                pass;
-            pass;
+    count += 1;
+
+    with open(fmy) as ffmy, open(fout) as ffout:
+        tmy = ffmy.read(); tout = ffout.read(); 
+        print(tmy == tout, fin, sep='\t');
+        if tmy == tout:
+            correct += 1;
         pass;
-    else:
-        couldnt_execute += 1;
-        print("couldn't execute");
     pass;
 pass;
 
