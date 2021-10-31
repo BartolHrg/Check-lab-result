@@ -4,9 +4,9 @@ import sys, os, subprocess;
 
 # compile lab before using this (except if you use python)
 
-# EDIT these
+# EDIT this
 # no need to edit anything else
-
+run_once = False;					# run only one test and exit
 test = "../lab 1 easy/test/";		# folder that contains .in and .out files in itself or its subfolders
 
 using_python = False;				# did you write lab in python
@@ -102,6 +102,10 @@ for folder, _, files in w:
         if tmy == tout:
             correct += 1;
         pass;
+    pass;
+    
+    if run_once:
+        break;
     pass;
 pass;
 
