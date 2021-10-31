@@ -13,12 +13,12 @@ test = "../lab 1 easy/test/";		# folder that contains .in and .out files in itse
 
 using_python = False;				# did you write lab in python
 if not using_python:
-    exe  = '../lab 1 easy/a.exe';	# path to .exe    can be anything if     using_python
-    exe = os.path.abspath(exe);
+    exe  = '../lab1/LeksickiAnalizator.exe';	# path to .exe    can be anything if     using_python
+    exe  = os.path.abspath(exe);
     args = [exe];
 else:
-    exe  = './testtest.py' ;		# path to .py     can be anything if not using_python
-    exe = os.path.abspath(exe);
+    exe  ='../lab1/LeksickiAnalizator.py';		# path to .py     can be anything if not using_python
+    exe  = os.path.abspath(exe);
     args = ['py', exe];
 pass;
 
@@ -31,8 +31,8 @@ err_ext = ".err";					# errors
 # + .
 # | + test
 # | | test.py (this file)
-# | + lab 1 easy
-# | | a.exe
+# | + lab1
+# | | LeksickiAnalizator.exe ili LeksickiAnalizator.py
 # | | + test
 # | | | + testni primjeri 1
 # | | | | + test01
