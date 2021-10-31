@@ -56,7 +56,7 @@ exe = os.path.abspath(exe);
 
 
 w = os.walk(test);
-next(w);
+# next(w); # don't know why I put it here
 
 count = 0;
 correct = 0;
