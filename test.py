@@ -4,9 +4,11 @@ import sys, os, subprocess;
 
 # compile lab before using this (except if you use python)
 
-# EDIT this
+# EDIT these
 # no need to edit anything else
+
 run_once = False;					# run only one test and exit
+
 test = "../lab 1 easy/test/";		# folder that contains .in and .out files in itself or its subfolders
 
 using_python = False;				# did you write lab in python
