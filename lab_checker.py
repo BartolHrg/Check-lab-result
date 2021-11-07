@@ -17,7 +17,7 @@ if not using_python:
     exe = os.path.abspath(exe);
     args = [exe];
 else:
-    exe  = '../a.py';		# path to .py     can be anything if not using_python
+    exe  = '../lab1/a.py';		# path to .py     can be anything if not using_python
     exe = os.path.abspath(exe);
     args = ['py', exe];
 pass;
