@@ -9,7 +9,7 @@ import sys, os, subprocess;
 
 run_once = False;					# run only one test and exit
 
-test = "../lab 1 easy/test/";		# folder that contains .in and .out files in itself or its subfolders
+test = "../lab1/test/";		# folder that contains .in and .out files in itself or its subfolders
 
 using_python = False;				# did you write lab in python
 if not using_python:
