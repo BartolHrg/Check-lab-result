@@ -111,7 +111,11 @@ try:
             if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr).returncode != 0:
                 print("couldn't execute, see", ferr);
                 couldnt_execute += 1;
-                continue;
+                if run_once:
+                    break;
+                else:
+                    continue;
+                pass;
             pass;
         pass;
 
