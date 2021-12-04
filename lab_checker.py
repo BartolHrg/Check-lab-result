@@ -19,7 +19,7 @@ if not using_python:
 else:
     exe  = '../lab1/a.py';		# path to .py     can be anything if not using_python
     exe = os.path.abspath(exe);
-    args = ['py', exe];
+    args = [sys.executable, exe];
 pass;
 
 in_ext  = '.in' ;					# extension for 'in' files
