@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, subprocess;
+import sys, os, subprocess, time;
 
 # compile lab before using this (except if you use python)
 
@@ -27,6 +27,10 @@ out_ext = '.out';					# extension for their 'out' files
 my_ext  = '.my' ;					# extension for files that program writes to
 err_ext = ".err";					# errors
 
+using_time_sleep = False;       # one person had problem that his output was red before it was writen to a file
+                                # set this to True if the results are `False` and you've checked that .my and .out file are identical
+time_sleep_time = 0.5           # 0.5 seconds
+    
 # that is an example for the following structure
 # + .
 # | + test
@@ -120,6 +124,9 @@ try:
         pass;
 
         count += 1;
+        if using_time_sleep:
+            time.sleep(time_sleep_time);
+        pass;
 
         with open(fmy) as ffmy, open(fout) as ffout:
             tmy = ffmy.read(); tout = ffout.read(); 
