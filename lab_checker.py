@@ -7,7 +7,7 @@ import sys, os, subprocess, time;
 # EDIT this
 # no need to edit anything else
 
-run_once = True;					# run only one test and exit
+run_only_one_test = True;					# run only one test and exit
 
 test = "../lab1/test/";		# folder that contains .in and .out files in itself or its subfolders
 
@@ -115,7 +115,7 @@ try:
             if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr).returncode != 0:
                 print("couldn't execute, see", ferr);
                 couldnt_execute += 1;
-                if run_once:
+                if run_only_one_test:
                     break;
                 else:
                     continue;
@@ -136,7 +136,7 @@ try:
             pass;
         pass;
         
-        if run_once:
+        if run_only_one_test:
             break;
         pass;
     pass;
@@ -177,6 +177,9 @@ except:
 else:
     print();
     print(f"correct {correct}/{count}");
+    if count == 1:
+        print("Careful! You ran only one test");
+    pass;
     if couldnt_execute != 0:
         print(f"failed execution {couldnt_execute} files");
     pass;
