@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, subprocess, time, re;
+import sys, os, subprocess, time;
 
 # compile lab before using this (except if you use python)
 
@@ -9,20 +9,20 @@ import sys, os, subprocess, time, re;
 
 run_only_one_test = False;					# run only one test and exit
 
-test = "../lab 4/test";		# folder that contains .in and .out files in itself or its subfolders
+test = "../lab 4/test";		# folder that contains .in and .out files in itself or its subfolders or their subfolders
 
-using_python = True;				# did you write lab in python
+using_python = False;				# did you write lab in python
 if not using_python:
-    exe  = '../lab 3/cmake-build-debug/lab_3.exe';	# path to .exe    can be anything if     using_python
+    exe  = '../lab 4/a.exe';	# path to .exe    can be anything if     using_python
     exe = os.path.abspath(exe);
     args = [exe];
 else:
-    exe  = '../lab 4/TEST/primjer/pr.py';		# path to .py     can be anything if not using_python
+    exe  = '../lab 4/a.py';		# path to .py     can be anything if not using_python
     exe = os.path.abspath(exe);
     args = [sys.executable, exe]; # try also with ['powershell', '/C', sys.executable, exe]
 pass;
 
-path_to_node = "node";
+path_to_node = "node"; # node is in $PATH probably
 path_to_main_js = "../lab 4/main.js";
 
 in_ext  = '.in' ;					# extension for 'in' files
@@ -39,9 +39,10 @@ time_sleep_time = 0.5           # 0.5 seconds
 # + .
 # | + test
 # | | test.py (this file)
-# | + lab1
+# | + lab 4
 # | | a.exe
 # | | a.py
+# | | main.js
 # | | + test
 # | | | + testni primjeri 1
 # | | | | + test01
