@@ -345,6 +345,7 @@ def print(*args, start="", sep=' ', end="\n"+"_"*150+"\n"):
 	output["state"] = tk.NORMAL;
 	output.insert(tk.END, x);
 	output["state"] = tk.DISABLED;
+	output.update();
 pass;
 
 lorem_ipsum = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vehicula dolor tristique dictum luctus. Aliquam erat volutpat. 
