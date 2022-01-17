@@ -15,6 +15,7 @@ lang = ".py";     # language that you have written in
 test_var = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/TEST/");                # folder that contains .in and .out files in itself or its subfolders
 
 exe_var  = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/TEST/primjer/pr.py");   # path to your COMPILED executable (or source if .py or others)
+frisc_folder_var = tk.StringVar(window, "fuck/a.frisc");
 
 node_var    = tk.StringVar(window, "node");                      # path to your node.js executable
 main_js_var = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/main.js");                              # path to main.js with which you run frisc
@@ -85,14 +86,25 @@ class LanguageChooser:
 	options = {
 		".py": lambda args: [sys.executable, *args],
 		".exe": lambda args: args,
-		".java": lambda args: dialog.showerror("Error", "Java not supported") and False or None,
+		".java": lambda args: ["java", "-jar", *args] # [*args[0].split(maxsplits=1), *args[1:]], # [tkfiles.askopenfilename(title="script that runs your java")]
 	};
 	def __init__(self) -> None:
 		frame = tk.Frame(config_frame);
 		frame.pack(fill=tk.X);
 		self.var = tk.StringVar(frame, lang);
 		for opt in LanguageChooser.options:
-			tk.Radiobutton(frame, text=opt, value=opt, variable=self.var).pack(side=tk.LEFT);
+			tk.Radiobutton(frame, text=opt, value=opt, variable=self.var, command=self.javaInfo if opt == ".java" else self.nothing).pack(side=tk.LEFT);
+		pass;
+	pass;
+	@property
+	def is_java(self):
+		return self.var.get() == ".java";
+	pass;
+	def javaInfo(self):
+		pass;
+		# dialog.showinfo("Before continuing", "create run script!\nWith extension .bat, .cmd, .ps1, .bash or whatever\nSomething like `java -cp target LabSolution`");
+	pass;
+	def nothing(self):
 		pass;
 	pass;
 	def get_cmd(self, args):
@@ -160,6 +172,8 @@ class RunTests:
 			pass;
 		pass;
 
+		ffrisc = os.path.join(frisc_folder_var.get(), 'a.frisc');
+
 		path_to_node    =    node_var.get();
 		path_to_main_js = main_js_var.get();
 		
@@ -197,7 +211,7 @@ class RunTests:
 				pass;
 				fin  = os.path.join(folder, fin);
 				fout = os.path.join(folder, fout);
-				ffrisc = os.path.abspath("./a.frisc");
+				# ffrisc = os.path.abspath("./a.frisc");
 				fmy    = os.path.commonprefix([fin, fout]);
 				if fmy.endswith('.') and my_ext.startswith('.'):
 					ferr = fmy + err_ext[1:];
@@ -208,7 +222,7 @@ class RunTests:
 				pass;
 
 				with open(fin) as ffin, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
-					if subprocess.run(args, stdin=ffin, stderr=fferr).returncode != 0:
+					if subprocess.run(args, cwd=frisc_folder_var.get(), stdin=ffin, stderr=fferr).returncode != 0:
 						print("couldn't compile, see", ferr);
 						couldnt_execute += 1;
 						if run_only_one_test.get():
@@ -245,7 +259,7 @@ class RunTests:
 					break;
 				pass;
 			pass;
-		except:
+		except Exception as e:
 			print();
 			msg = "Error!!!!!!!!!!!!\nCurrent state:\n";
 			try:
@@ -278,7 +292,7 @@ class RunTests:
 			except NameError:
 				pass;
 			pass;
-			print(msg);
+			print(msg + '\n' + str(e));
 		else:
 			print();
 			msg = f"\ncorrect {correct}/{count}";
@@ -298,7 +312,8 @@ pass;
 
 lang = LanguageChooser();
 FileInput("Test folder",  test_var,    True,  "folder that contains .in and .out files\nin itself or its subfolders\nor their subfolders, and so on");
-FileInput("your program", exe_var,     False, "your program (compile it before testing)\n");
+FileInput("your program", exe_var,     False, "your program (compile it before testing)\nIn case of Python: .py file\nIn case of Java: .jar file\n");
+FileInput("a.frisc folder", frisc_folder_var,     True, "a.frisc expected folder\n");
 FileInput("node.js",      node_var,    False, "path to your node.js executable\n");
 FileInput("main.js",      main_js_var, False, "path to your main.js that runs frisc\n");
 FileTypes(
