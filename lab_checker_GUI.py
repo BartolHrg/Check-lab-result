@@ -292,6 +292,7 @@ tmp = tk.Frame(config_frame);
 tk.Checkbutton(tmp, text="Run only one test?", variable=run_only_one_test).pack(side=tk.LEFT);
 tmp.pack(fill=tk.X);
 del tmp;
+tk.Button(window, text="Quit tkinter mainloop", command=window.quit).pack();
 
 RunTests();
 
