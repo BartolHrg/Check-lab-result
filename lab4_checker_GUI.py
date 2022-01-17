@@ -350,6 +350,8 @@ def print(*args, start="", sep=' ', end="\n"+"_"*150+"\n"):
 	output.see(tk.END);
 pass;
 
+window.mainloop();
+
 lorem_ipsum = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vehicula dolor tristique dictum luctus. Aliquam erat volutpat. 
 Aenean finibus bibendum ornare. Sed semper sem eget suscipit consectetur. Suspendisse at dui at nunc lobortis fermentum. 
 Nam congue mauris suscipit, rhoncus justo eget, ullamcorper nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; 
