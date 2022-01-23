@@ -15,7 +15,7 @@ lang = ".py";     # language that you have written in
 test_var = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/TEST/");                # folder that contains .in and .out files in itself or its subfolders
 
 exe_var  = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/TEST/primjer/pr.py");   # path to your COMPILED executable (or source if .py or others)
-frisc_folder_var = tk.StringVar(window, "fuck/a.frisc");
+frisc_folder_var = tk.StringVar(window, "fuck/");
 
 node_var    = tk.StringVar(window, "node");                      # path to your node.js executable
 main_js_var = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/main.js");                              # path to main.js with which you run frisc
