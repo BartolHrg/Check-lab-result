@@ -1,5 +1,15 @@
 #!/usr/bin/env python
 
+# to make .jar in IntelliJ
+# 1. izbornik File -> Project Structure -> Artifacts
+# 2. kliknuti na "+" -> JAR -> From modules with dependencies
+# 3. pod Main Class: izabrati klasu koja sadrži glavni program 
+# 4. OK -> OK
+# 5. izbornik Build -> Build Artifacts
+# 6. u otvorenom izborniku kliknuti na nazivProjekta:jar -> Build
+# 7. .jar file je stvoren, mozete ga pronaci u:
+# out -> artifacts -> nazivProjekta_jar
+
 import sys, os, subprocess, time;
 import tkinter as tk, tkinter.ttk as ttk, tkinter.filedialog as tkfiles, tkinter.messagebox as dialog;
 
