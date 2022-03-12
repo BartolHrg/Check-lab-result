@@ -12,9 +12,9 @@ window.geometry("1500x600");
 
 lang = ".py";     # language that you have written in
 
-test_var = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/TEST/");                # folder that contains .in and .out files in itself or its subfolders
+test_var = tk.StringVar(window, ".");                # folder that contains .in and .out files in itself or its subfolders
 
-exe_var  = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/TEST/primjer/pr.py");   # path to your COMPILED executable (or source if .py or others)
+exe_var  = tk.StringVar(window, "./test.py");        # path to your COMPILED executable (or source if .py or others)
 
 node_var    = tk.StringVar(window, "node");                      # path to your node.js executable
 main_js_var = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/main.js");                              # path to main.js with which you run frisc
@@ -85,7 +85,7 @@ class LanguageChooser:
 	options = {
 		".py": lambda args: [sys.executable, *args],
 		".exe": lambda args: args,
-		".java": lambda args: dialog.showerror("Error", "Java not supported") and False or None,
+		".java": lambda args: ["java", "-jar", *args] # [*args[0].split(maxsplits=1), *args[1:]], # [tkfiles.askopenfilename(title="script that runs your java")]
 	};
 	def __init__(self) -> None:
 		frame = tk.Frame(config_frame);
@@ -135,17 +135,20 @@ class RunTests:
 	def __init__(self) -> None:
 		frame = tk.Frame(window);
 		frame.pack(expand=False, fill=tk.X, side=tk.TOP, padx=5, pady=5);
-		tk.Button(frame, text="run tests",    command=RunTests.runTests).pack(side=tk.LEFT);
-		tk.Button(frame, text="clear output", command=RunTests.clear   ).pack(side=tk.LEFT);
+		tk.Button(frame, text="run tests",    command=self.runTests).pack(side=tk.LEFT);
+		tk.Button(frame, text="clear output", command=self.clear   ).pack(side=tk.LEFT);
+		tk.Button(frame, text="break",        command=self.breakOut).pack(side=tk.LEFT);
+		self.stop = False;
 	pass;
-	@staticmethod
-	def clear():
+	def breakOut(self):
+		self.stop = True;
+	def clear(self):
 		output["state"] = tk.NORMAL;
 		output.delete(0.0, tk.END);
 		output["state"] = tk.DISABLED;
 	pass;
-	@staticmethod
-	def runTests():
+	def runTests(self):
+		self.stop = False;
 		test = os.path.abspath(test_var.get());
 		exe = os.path.abspath(exe_var.get());
 
@@ -183,6 +186,9 @@ class RunTests:
 		couldnt_execute = 0;
 		try:
 			for folder, _, files in w:
+				if self.stop:
+					break;
+				pass;
 				fin = fout = None;
 				for file in files:
 					if file.endswith(in_ext):
@@ -212,6 +218,7 @@ class RunTests:
 					fmy += my_ext;
 				pass;
 
+				window.update();
 				with open(fin) as ffin, open(ffrisc, 'w') as fffrisc, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
 					if subprocess.run(args, stdin=ffin, stdout=fffrisc, stderr=fferr).returncode != 0:
 						print("couldn't compile, see", ferr);
@@ -250,7 +257,7 @@ class RunTests:
 					break;
 				pass;
 			pass;
-		except:
+		except Exception as e:
 			print();
 			msg = "Error!!!!!!!!!!!!\nCurrent state:\n";
 			try:
@@ -283,7 +290,7 @@ class RunTests:
 			except NameError:
 				pass;
 			pass;
-			print(msg);
+			print(msg + '\n' + str(e));
 		else:
 			print();
 			msg = f"\ncorrect {correct}/{count}";
@@ -295,6 +302,9 @@ class RunTests:
 			if count == 1:
 				dialog.showwarning("Careful!", 'You only run 1 test file!\nThere might be more\nUncheck "Run only one test?"');
 			pass;
+			if self.stop:
+				dialog.showinfo("Break", "This run was forcefully stoped");
+			pass;
 		finally:
 			print('#'*150, sep='\n', end='\n');
 		pass;
@@ -303,7 +313,7 @@ pass;
 
 lang = LanguageChooser();
 FileInput("Test folder",  test_var,    True,  "folder that contains .in and .out files\nin itself or its subfolders\nor their subfolders, and so on");
-FileInput("your program", exe_var,     False, "your program (compile it before testing)\n");
+FileInput("your program", exe_var,     False, "your program (compile it before testing)\nIn case of Python: .py file\nIn case of Java: .jar file\n");
 FileInput("node.js",      node_var,    False, "path to your node.js executable\n");
 FileInput("main.js",      main_js_var, False, "path to your main.js that runs frisc\n");
 FileTypes(

@@ -12,14 +12,15 @@ window.geometry("1500x600");
 
 lang = ".py";     # language that you have written in
 
-test_var = tk.StringVar(window, "./testtest");                # folder that contains .in and .out files in itself or its subfolders
+test_var = tk.StringVar(window, ".");                # folder that contains .in and .out files in itself or its subfolders
 
-exe_var  = tk.StringVar(window, "./testtest/test.py");        # path to your COMPILED executable (or source if .py or others)
+exe_var  = tk.StringVar(window, "./test.py");        # path to your COMPILED executable (or source if .py or others)
 
-in_ext_var  = tk.StringVar(window, ".in" );          # extension for 'in' files
-out_ext_var = tk.StringVar(window, ".out");          # extension for their 'out' files
-my_ext_var  = tk.StringVar(window, ".my" );          # extension for files that program writes to
-err_ext_var = tk.StringVar(window, ".err");          # errors
+
+in_ext_var     = tk.StringVar(window, ".in" );             # extension for 'in' files
+out_ext_var    = tk.StringVar(window, ".out");             # extension for their 'out' files
+my_ext_var     = tk.StringVar(window, ".my" );             # extension for files that program writes to
+err_ext_var    = tk.StringVar(window, ".err");             # errors
 
 #                                                         # one person had problem that his output was red before it was writen to a file
 using_time_sleep = tk.BooleanVar(window, False);          # set this to True if the results are `False` and you've checked that .my and .out file are identical
@@ -68,7 +69,7 @@ class FileInput:
 		self.helpmsg = help;
 	pass;
 	def cmd(self):
-		a = self.ask(initialdir=".");
+		a = self.ask(initialdir=os.path.dirname(self.var.get()) or ".");
 		if a is not None and a != "":
 			self.var.set(a);
 		pass;
@@ -81,7 +82,7 @@ class LanguageChooser:
 	options = {
 		".py": lambda args: [sys.executable, *args],
 		".exe": lambda args: args,
-		".java": lambda args: dialog.showerror("Error", "Java not supported") and False or None,
+		".java": lambda args: ["java", "-jar", *args] # [*args[0].split(maxsplits=1), *args[1:]], # [tkfiles.askopenfilename(title="script that runs your java")]
 	};
 	def __init__(self) -> None:
 		frame = tk.Frame(config_frame);
@@ -131,17 +132,20 @@ class RunTests:
 	def __init__(self) -> None:
 		frame = tk.Frame(window);
 		frame.pack(expand=False, fill=tk.X, side=tk.TOP, padx=5, pady=5);
-		tk.Button(frame, text="run tests",    command=RunTests.runTests).pack(side=tk.LEFT);
-		tk.Button(frame, text="clear output", command=RunTests.clear   ).pack(side=tk.LEFT);
+		tk.Button(frame, text="run tests",    command=self.runTests).pack(side=tk.LEFT);
+		tk.Button(frame, text="clear output", command=self.clear   ).pack(side=tk.LEFT);
+		tk.Button(frame, text="break",        command=self.breakOut).pack(side=tk.LEFT);
+		self.stop = False;
 	pass;
-	@staticmethod
-	def clear():
+	def breakOut(self):
+		self.stop = True;
+	def clear(self):
 		output["state"] = tk.NORMAL;
 		output.delete(0.0, tk.END);
 		output["state"] = tk.DISABLED;
 	pass;
-	@staticmethod
-	def runTests():
+	def runTests(self):
+		self.stop = False;
 		test = os.path.abspath(test_var.get());
 		exe = os.path.abspath(exe_var.get());
 
@@ -156,10 +160,11 @@ class RunTests:
 			pass;
 		pass;
 		
-		in_ext  =  in_ext_var.get();
-		out_ext = out_ext_var.get();
-		my_ext  =  my_ext_var.get();
-		err_ext = err_ext_var.get();
+		
+		in_ext    =    in_ext_var.get();
+		out_ext   =   out_ext_var.get();
+		my_ext    =    my_ext_var.get();
+		err_ext   =   err_ext_var.get();
 
 		args = lang.get_cmd([exe]);
 		if args is None:
@@ -175,6 +180,9 @@ class RunTests:
 		couldnt_execute = 0;
 		try:
 			for folder, _, files in w:
+				if self.stop:
+					break;
+				pass;
 				fin = fout = None;
 				for file in files:
 					if file.endswith(in_ext):
@@ -198,6 +206,7 @@ class RunTests:
 					fmy += my_ext;
 				pass;
 
+				window.update();
 				with open(fin) as ffin, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
 					if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr).returncode != 0:
 						print("couldn't execute, see", ferr, end='\n');
@@ -227,7 +236,7 @@ class RunTests:
 					break;
 				pass;
 			pass;
-		except:
+		except Exception as e:
 			print();
 			msg = "Error!!!!!!!!!!!!\nCurrent state:\n";
 			try:
@@ -260,7 +269,7 @@ class RunTests:
 			except NameError:
 				pass;
 			pass;
-			print(msg);
+			print(msg + '\n' + str(e));
 		else:
 			print();
 			msg = f"\ncorrect {correct}/{count}";
@@ -272,6 +281,9 @@ class RunTests:
 			if count == 1:
 				dialog.showwarning("Careful!", 'You only run 1 test file!\nThere might be more\nUncheck "Run only one test?"');
 			pass;
+			if self.stop:
+				dialog.showinfo("Break", "This run was forcefully stoped");
+			pass;
 		finally:
 			print('#'*150, sep='\n', end='\n');
 		pass;
@@ -279,13 +291,13 @@ class RunTests:
 pass;
 
 lang = LanguageChooser();
-FileInput("Test folder", test_var, True, "folder that contains .in and .out files\nin itself or its subfolders\nor their subfolders, and so on");
-FileInput("your program", exe_var, False, "your program (compile it before testing)\n")
+FileInput("Test folder",  test_var,    True,  "folder that contains .in and .out files\nin itself or its subfolders\nor their subfolders, and so on");
+FileInput("your program", exe_var,     False, "your program (compile it before testing)\nIn case of Python: .py file\nIn case of Java: .jar file\n");
 FileTypes(
-	(in_ext_var,  "input files"), 
-	(out_ext_var, "their output"),
-	(my_ext_var,  "your output"),
-	(err_ext_var, "error output"),
+	(in_ext_var,    "input files"), 
+	(out_ext_var,   "their output"),
+	(my_ext_var,    "your output"),
+	(err_ext_var,   "error output"),
 );
 TimeDelay(using_time_sleep, time_sleep_time)
 tmp = tk.Frame(config_frame);
