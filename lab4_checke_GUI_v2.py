@@ -14,7 +14,7 @@ lang = ".py";     # language that you have written in
 
 test_var = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/TEST/");                # folder that contains .in and .out files in itself or its subfolders
 
-exe_var  = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/TEST/primjer/pr.py");   # path to your COMPILED executable (or source if .py or others)
+exe_var  = tk.StringVar(window, "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/FRISCGenerator.py");   # path to your COMPILED executable (or source if .py or others)
 frisc_folder_var = tk.StringVar(window, "fuck/");
 
 node_var    = tk.StringVar(window, "node");                      # path to your node.js executable
@@ -147,17 +147,20 @@ class RunTests:
 	def __init__(self) -> None:
 		frame = tk.Frame(window);
 		frame.pack(expand=False, fill=tk.X, side=tk.TOP, padx=5, pady=5);
-		tk.Button(frame, text="run tests",    command=RunTests.runTests).pack(side=tk.LEFT);
-		tk.Button(frame, text="clear output", command=RunTests.clear   ).pack(side=tk.LEFT);
+		tk.Button(frame, text="run tests",    command=self.runTests).pack(side=tk.LEFT);
+		tk.Button(frame, text="clear output", command=self.clear   ).pack(side=tk.LEFT);
+		tk.Button(frame, text="break",        command=self.breakOut).pack(side=tk.LEFT);
+		self.stop = False;
 	pass;
-	@staticmethod
-	def clear():
+	def breakOut(self):
+		self.stop = True;
+	def clear(self):
 		output["state"] = tk.NORMAL;
 		output.delete(0.0, tk.END);
 		output["state"] = tk.DISABLED;
 	pass;
-	@staticmethod
-	def runTests():
+	def runTests(self):
+		self.stop = False;
 		test = os.path.abspath(test_var.get());
 		exe = os.path.abspath(exe_var.get());
 
@@ -197,6 +200,9 @@ class RunTests:
 		couldnt_execute = 0;
 		try:
 			for folder, _, files in w:
+				if self.stop:
+					break;
+				pass;
 				fin = fout = None;
 				for file in files:
 					if file.endswith(in_ext):
@@ -221,6 +227,7 @@ class RunTests:
 					fmy += my_ext;
 				pass;
 
+				window.update();
 				with open(fin) as ffin, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
 					if subprocess.run(args, cwd=frisc_folder_var.get(), stdin=ffin, stderr=fferr).returncode != 0:
 						print("couldn't compile, see", ferr);
@@ -303,6 +310,9 @@ class RunTests:
 			dialog.showinfo("Result", msg);
 			if count == 1:
 				dialog.showwarning("Careful!", 'You only run 1 test file!\nThere might be more\nUncheck "Run only one test?"');
+			pass;
+			if self.stop:
+				dialog.showinfo("Break", "This run was forcefully stoped");
 			pass;
 		finally:
 			print('#'*150, sep='\n', end='\n');
