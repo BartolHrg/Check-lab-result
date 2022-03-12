@@ -113,7 +113,7 @@ class LanguageChooser:
 pass;
 class FileTypes:
 	def __init__(self, *args) -> None:
-		frame = tk.Frame(config_frame);
+		frame = tk.LabelFrame(config_frame, text="file extensions");
 		frame.pack(fill=tk.X);
 		for ext, label in args:
 			area = tk.Frame(frame);
@@ -249,7 +249,7 @@ class RunTests:
 
 				with open(fmy) as ffmy, open(fout) as ffout:
 					tmy = ffmy.read(); tout = ffout.read(); 
-					print("correct  " if tmy == tout else "incorrect", fin, sep='\t', end='\n');
+					print("correct  " if tmy == tout else "incorrect", os.path.relpath(fin, test), sep='\t', end='\n');
 					if tmy == tout:
 						correct += 1;
 					pass;
