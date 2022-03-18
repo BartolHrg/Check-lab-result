@@ -95,7 +95,8 @@ class LanguageChooser:
 	options = {
 		".py": lambda args: [sys.executable, *args],
 		".exe": lambda args: args,
-		".java": lambda args: ["java", "-jar", *args] # [*args[0].split(maxsplits=1), *args[1:]], # [tkfiles.askopenfilename(title="script that runs your java")]
+		".java": lambda args: ["java", *args],
+		".jar": lambda args: ["java", "-jar", *args] # [*args[0].split(maxsplits=1), *args[1:]], # [tkfiles.askopenfilename(title="script that runs your java")]
 	};
 	def __init__(self) -> None:
 		frame = tk.Frame(config_frame);
@@ -117,7 +118,7 @@ class FileTypes:
 			area = tk.Frame(frame);
 			area.pack(side=tk.LEFT);
 			tk.Label(area, text=label, anchor=tk.W).pack(fill=tk.X);
-			tk.Entry(area, textvariable=ext)           .pack(fill=tk.X);
+			tk.Entry(area, textvariable=ext)       .pack(fill=tk.X);
 		pass;
 	pass;
 pass;
@@ -172,6 +173,7 @@ class RunTests:
 				sys.exit(1);
 			pass;
 		pass;
+		cwd = os.path.dirname(exe);
 
 		path_to_node    =    node_var.get();
 		path_to_main_js = main_js_var.get();
@@ -211,10 +213,10 @@ class RunTests:
 				if fin is None or fout is None:
 					continue;
 				pass;
-				fin  = os.path.join(folder, fin);
-				fout = os.path.join(folder, fout);
-				ffrisc = os.path.commonprefix([fin, fout]);
+				fin    = os.path.join(folder, fin);
+				fout   = os.path.join(folder, fout);
 				fmy    = os.path.commonprefix([fin, fout]);
+				ffrisc = os.path.commonprefix([fin, fout]);
 				if ffrisc.endswith('.') and frisc_ext.startswith('.'):
 					ffrisc += frisc_ext[1:];
 				else:
@@ -230,7 +232,7 @@ class RunTests:
 
 				window.update();
 				with open(fin) as ffin, open(ffrisc, 'w') as fffrisc, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
-					if subprocess.run(args, stdin=ffin, stdout=fffrisc, stderr=fferr).returncode != 0:
+					if subprocess.run(args, stdin=ffin, stdout=fffrisc, stderr=fferr, cwd=cwd, shell=True).returncode != 0:
 						print("couldn't compile, see", ferr);
 						couldnt_execute += 1;
 						if run_only_one_test.get():
@@ -239,7 +241,7 @@ class RunTests:
 							continue;
 						pass;
 					pass;
-					if subprocess.run([path_to_node, path_to_main_js, ffrisc], stdout=ffmy, stderr=fferr).returncode != 1: # main.js uvijek vraća 1?
+					if subprocess.run([path_to_node, path_to_main_js, ffrisc], stdout=ffmy, stderr=fferr, cwd=cwd, shell=True).returncode != 1: # main.js uvijek vraća 1?
 						print("couldn't execute, see", ferr);
 						couldnt_execute += 1;
 						if run_only_one_test.get():
@@ -323,7 +325,7 @@ pass;
 
 lang = LanguageChooser();
 FileInput("Test folder",  test_var,    True,  "folder that contains .in and .out files\nin itself or its subfolders\nor their subfolders, and so on");
-FileInput("your program", exe_var,     False, "your program (compile it before testing)\nIn case of Python: .py file\nIn case of Java: .jar file\n");
+FileInput("your program", exe_var,     False, "your program (compile it before testing)\nIn case of Python: .py file\nIn case of Java: .java file (but compile it before using javac)\nAlso for Java there is EXECUTABLE .jar");
 FileInput("node.js",      node_var,    False, "path to your node.js executable\n");
 FileInput("main.js",      main_js_var, False, "path to your main.js that runs frisc\n");
 FileTypes(

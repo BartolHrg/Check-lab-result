@@ -92,7 +92,8 @@ class LanguageChooser:
 	options = {
 		".py": lambda args: [sys.executable, *args],
 		".exe": lambda args: args,
-		".java": lambda args: ["java", "-jar", *args] # [*args[0].split(maxsplits=1), *args[1:]], # [tkfiles.askopenfilename(title="script that runs your java")]
+		".java": lambda args: ["java", *args],
+		".jar": lambda args: ["java", "-jar", *args] # [*args[0].split(maxsplits=1), *args[1:]], # [tkfiles.askopenfilename(title="script that runs your java")]
 	};
 	def __init__(self) -> None:
 		frame = tk.Frame(config_frame);
@@ -114,7 +115,7 @@ class FileTypes:
 			area = tk.Frame(frame);
 			area.pack(side=tk.LEFT);
 			tk.Label(area, text=label, anchor=tk.W).pack(fill=tk.X);
-			tk.Entry(area, textvariable=ext)           .pack(fill=tk.X);
+			tk.Entry(area, textvariable=ext)       .pack(fill=tk.X);
 		pass;
 	pass;
 pass;
@@ -169,6 +170,7 @@ class RunTests:
 				sys.exit(1);
 			pass;
 		pass;
+		cwd = os.path.dirname(exe);
 		
 		
 		in_ext    =    in_ext_var.get();
@@ -218,7 +220,7 @@ class RunTests:
 
 				window.update();
 				with open(fin) as ffin, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
-					if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr).returncode != 0:
+					if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr, cwd=cwd, shell=True).returncode != 0:
 						print("couldn't execute, see", ferr, end='\n');
 						couldnt_execute += 1;
 						if run_only_one_test.get():
@@ -302,7 +304,7 @@ pass;
 
 lang = LanguageChooser();
 FileInput("Test folder",  test_var,    True,  "folder that contains .in and .out files\nin itself or its subfolders\nor their subfolders, and so on");
-FileInput("your program", exe_var,     False, "your program (compile it before testing)\nIn case of Python: .py file\nIn case of Java: .jar file\n");
+FileInput("your program", exe_var,     False, "your program (compile it before testing)\nIn case of Python: .py file\nIn case of Java: .java file (but compile it before using javac)\nAlso for Java there is EXECUTABLE .jar");
 FileTypes(
 	(in_ext_var,    "input files"), 
 	(out_ext_var,   "their output"),
