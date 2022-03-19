@@ -259,8 +259,8 @@ class RunTests:
 
 				with open(fmy) as ffmy, open(fout) as ffout:
 					tmy = ffmy.read(); tout = ffout.read(); 
-					print("correct  " if tmy == tout else "incorrect", os.path.relpath(fin, test), sep='\t', end='\n');
-					if tmy == tout:
+					print("correct  " if tmy.strip() == tout.strip() else "incorrect", os.path.relpath(fin, test), sep='\t', end='\n');
+					if tmy.strip() == tout.strip():
 						correct += 1;
 					pass;
 				pass;

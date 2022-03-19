@@ -130,8 +130,8 @@ try:
 
         with open(fmy) as ffmy, open(fout) as ffout:
             tmy = ffmy.read(); tout = ffout.read(); 
-            print(tmy == tout, fin, sep='\t');
-            if tmy == tout:
+            print(tmy.strip() == tout.strip(), fin, sep='\t');
+            if tmy.strip() == tout.strip():
                 correct += 1;
             pass;
         pass;
