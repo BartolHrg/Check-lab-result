@@ -35,7 +35,7 @@ err_ext_var    = tk.StringVar(window, ".err");             # errors
 #                                                         # one person had problem that his output was red before it was writen to a file
 using_time_sleep = tk.BooleanVar(window, False);          # set this to True if the results are `False` and you've checked that .my and .out file are identical
 time_sleep_time = tk.DoubleVar(window, 0.5)               # 0.5 seconds
-
+timeout         = tk.IntVar   (window, 10);
 
 run_only_one_test = tk.BooleanVar(window, False);	    # run only one test and exit
 
@@ -77,17 +77,17 @@ class FileInput:
 		tk.Button(frame, text="select", command=self.cmd).pack(side=tk.LEFT);
 		tk.Button(frame, text="help", command=self.help).pack(side=tk.LEFT);
 		self.helpmsg = help;
-	pass;
+	pass
 	def cmd(self):
 		a = self.ask(initialdir=os.path.dirname(self.var.get()) or ".");
 		if a is not None and a != "":
 			self.var.set(a);
-		pass;
-	pass;
+		pass
+	pass
 	def help(self):
 		dialog.showinfo(f"help on {self.label}", self.helpmsg);
-	pass;
-pass;
+	pass
+pass
 class LanguageChooser:
 	options = {
 		".py": lambda args: [sys.executable, *args],
@@ -101,12 +101,12 @@ class LanguageChooser:
 		self.var = tk.StringVar(frame, lang);
 		for opt in LanguageChooser.options:
 			tk.Radiobutton(frame, text=opt, value=opt, variable=self.var).pack(side=tk.LEFT);
-		pass;
-	pass;
+		pass
+	pass
 	def get_cmd(self, args):
 		return LanguageChooser.options[self.var.get()](args);
-	pass;
-pass;
+	pass
+pass
 class FileTypes:
 	def __init__(self, *args) -> None:
 		frame = tk.LabelFrame(config_frame, text="file extensions");
@@ -116,9 +116,9 @@ class FileTypes:
 			area.pack(side=tk.LEFT);
 			tk.Label(area, text=label, anchor=tk.W).pack(fill=tk.X);
 			tk.Entry(area, textvariable=ext)       .pack(fill=tk.X);
-		pass;
-	pass;
-pass;
+		pass
+	pass
+pass
 class TimeDelay:
 	def __init__(self, cond: tk.BooleanVar, time: tk.DoubleVar) -> None:
 		self.cond = cond;
@@ -130,14 +130,31 @@ class TimeDelay:
 		self.entry.pack(side=tk.LEFT);
 		tk.Button(frame, text="help", command=self.help).pack(side=tk.LEFT);
 		self.disenable();
-	pass;
+	pass
 	def disenable(self):
 		self.entry["state"] = tk.NORMAL if self.cond.get() else tk.DISABLED;
-	pass;	
+	pass	
 	def help(self):
 		dialog.showinfo("Help on time delay", "Someone had a problem, where outputs were compared\nbefore output was written to .my file.\nThis will delay this many seconds before comparing");
-	pass;
-pass;
+	pass
+pass
+class InputWithLabel:
+	def __init__(self, label: str, var: tk.Variable, help=None):
+		self.label = label;
+		self.var = var;
+		frame = tk.Frame(config_frame);
+		frame.pack(fill=tk.X);
+		tk.Label(frame, text=label).pack(side=tk.LEFT);
+		self.entry = tk.Entry(frame, textvariable=var);
+		self.entry.pack(side=tk.LEFT);
+		self.help = help;
+		if help is not None:
+			tk.Button(frame, text="help", command=self.help).pack(side=tk.LEFT);
+		pass
+	def help(self):
+		dialog.showinfo("Help", self.help);
+	pass
+pass
 
 class RunTests:
 	def __init__(self) -> None:
@@ -147,14 +164,14 @@ class RunTests:
 		tk.Button(frame, text="clear output", command=self.clear   ).pack(side=tk.LEFT);
 		tk.Button(frame, text="break",        command=self.breakOut).pack(side=tk.LEFT);
 		self.stop = False;
-	pass;
+	pass
 	def breakOut(self):
 		self.stop = True;
 	def clear(self):
 		output["state"] = tk.NORMAL;
 		output.delete(0.0, tk.END);
 		output["state"] = tk.DISABLED;
-	pass;
+	pass
 	def runTests(self):
 		self.stop = False;
 		test = os.path.abspath(test_var.get());
@@ -163,13 +180,13 @@ class RunTests:
 		if not os.path.exists(exe):
 			if not dialog.askyesno("File doesn't exist!", f"Error: {exe} doesn't exist\nContinue anyway?"):
 				sys.exit(1);
-			pass;
-		pass;
+			pass
+		pass
 		if not os.path.exists(test):
 			if not dialog.askyesno("File doesn't exist!", f"Error: {test} doesn't exist\nContinue anyway?"):
 				sys.exit(1);
-			pass;
-		pass;
+			pass
+		pass
 		cwd = os.path.dirname(exe);
 		
 		
@@ -181,7 +198,7 @@ class RunTests:
 		args = lang.get_cmd([exe]);
 		if args is None:
 			return;
-		pass;
+		pass
 
 		print(f"running {exe}", f"on test folder {test}", start='_'*150+'\n', sep='\n', end='\n'+'_'*150+'\n');
 
@@ -194,113 +211,123 @@ class RunTests:
 			for folder, _, files in w:
 				if self.stop:
 					break;
-				pass;
+				pass
 				fin = fout = None;
 				for file in files:
 					if file.endswith(in_ext):
 						fin = file;
-					pass;
+					pass
 					if file.endswith(out_ext):
 						fout = file;
-					pass;
-				pass;
+					pass
+				pass
 				if fin is None or fout is None:
 					continue;
-				pass;
-				fin  = os.path.join(folder, fin);
-				fout = os.path.join(folder, fout);
-				fmy  = os.path.commonprefix([fin, fout]);
+				pass
+				fin    = os.path.join(folder, fin);
+				fout   = os.path.join(folder, fout);
+				fmy    = os.path.commonprefix([fin, fout]);
 				if fmy.endswith('.') and my_ext.startswith('.'):
 					ferr = fmy + err_ext[1:];
 					fmy += my_ext[1:];
 				else:
 					ferr = fmy + err_ext;
 					fmy += my_ext;
-				pass;
+				pass
 
 				window.update();
 				with open(fin) as ffin, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
-					if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr, cwd=cwd, shell=True).returncode != 0:
-						print("couldn't execute, see", ferr, end='\n');
-						couldnt_execute += 1;
+					try:
+						if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr, cwd=cwd, shell=True, timeout=timeout.get()).returncode != 0:
+							print("couldn't execute, see", ferr, end='\n');
+							couldnt_execute += 1;
+							if run_only_one_test.get():
+								break;
+							else:
+								continue;
+							pass
+						pass
+					except subprocess.TimeoutExpired:
+						print("timeout  ", os.path.relpath(fin, test), sep='\t', end='\n');
+						count += 1;
 						if run_only_one_test.get():
 							break;
 						else:
 							continue;
-						pass;
-					pass;
-				pass;
+						pass
+					pass
+				pass
 
 				count += 1;
 				if using_time_sleep.get():
 					time.sleep(time_sleep_time.get());
-				pass;
+				pass
 
 				with open(fmy) as ffmy, open(fout) as ffout:
 					tmy = ffmy.read(); tout = ffout.read(); 
 					print("correct  " if tmy.strip() == tout.strip() else "incorrect", os.path.relpath(fin, test), sep='\t', end='\n');
 					if tmy.strip() == tout.strip():
 						correct += 1;
-					pass;
-				pass;
+					pass
+				pass
 				
 				if run_only_one_test.get():
 					break;
-				pass;
-			pass;
+				pass
+			pass
 		except Exception as e:
 			print();
 			msg = "Error!!!!!!!!!!!!\nCurrent state:\n";
 			try:
 				msg += f"{args=}\n";
 			except NameError:
-				pass;
-			pass;
+				pass
+			pass
 			try:
 				msg += f"{exe=}\n";
 			except NameError:
-				pass;
-			pass;
+				pass
+			pass
 			try:
 				msg += f"{test=}\n";
 			except NameError:
-				pass;
-			pass;
+				pass
+			pass
 			try:
 				msg += f"{folder=}\n";
 			except NameError:
-				pass;
-			pass;
+				pass
+			pass
 			try:
 				msg += f"{fin=}\n";
 			except NameError:
-				pass;
-			pass;
+				pass
+			pass
 			try:
 				msg += f"{fout=}\n";
 			except NameError:
-				pass;
-			pass;
+				pass
+			pass
 			print(msg + '\n' + str(e));
 		else:
 			print();
 			msg = f"\ncorrect {correct}/{count}";
 			if couldnt_execute != 0:
 				msg += f"\nfailed execution of {couldnt_execute} files";
-			pass;
+			pass
 			print(msg);
 			dialog.showinfo("Result", msg);
 			if count == 1:
 				dialog.showwarning("Careful!", 'You only run 1 test file!\nThere might be more\nUncheck "Run only one test?"');
-			pass;
+			pass
 			if self.stop:
 				dialog.showinfo("Break", "This run was forcefully stoped");
-			pass;
+			pass
 		finally:
 			print('#'*150, sep='\n', end='\n');
-		pass;
-	pass;
-pass;
+		pass
+	pass
+pass
 
 lang = LanguageChooser();
 FileInput("Test folder",  test_var,    True,  "folder that contains .in and .out files\nin itself or its subfolders\nor their subfolders, and so on");
@@ -311,6 +338,7 @@ FileTypes(
 	(my_ext_var,    "your output"),
 	(err_ext_var,   "error output"),
 );
+InputWithLabel("timeout", timeout, "in case there is infinite loop terminate program when time exceedes limit");
 TimeDelay(using_time_sleep, time_sleep_time)
 tmp = tk.Frame(config_frame);
 tk.Checkbutton(tmp, text="Run only one test?", variable=run_only_one_test).pack(side=tk.LEFT);
@@ -338,15 +366,15 @@ def print(*args, start="", sep=' ', end="\n"+"_"*150+"\n"):
 		for arg in args:
 			x += sep;
 			x += str(arg);
-		pass;
-	pass;
+		pass
+	pass
 	x += str(end);
 	output["state"] = tk.NORMAL;
 	output.insert(tk.END, x);
 	output["state"] = tk.DISABLED;
 	output.update();
 	output.see(tk.END);
-pass;
+pass
 
 window.mainloop();
 
