@@ -20,7 +20,7 @@ else:
     exe  = '../lab1/a.py';		# path to .py     can be anything if not using_python
     exe = os.path.abspath(exe);
     args = [sys.executable, exe]; # try also with ['powershell', '/C', sys.executable, exe]
-pass;
+pass
 
 in_ext  = '.in' ;					# extension for 'in' files
 out_ext = '.out';					# extension for their 'out' files
@@ -65,16 +65,16 @@ if not os.path.exists(exe):
     print(f"Error: {exe} doesn't exist", end=' ');
     if input("continue (yes/no)? ") != "yes":
         sys.exit(1);
-    pass;
+    pass
     print("continuing");
-pass;
+pass
 if not os.path.exists(test):
     print(f"Error: {test} doesn't exist", end=' ');
     if input("continue (yes/no)? ") != "yes":
         sys.exit(1);
-    pass;
+    pass
     print("continuing");
-pass;
+pass
 
 print(f"running {exe}");
 print(f"on test folder {test}");
@@ -92,14 +92,14 @@ try:
         for file in files:
             if file.endswith(in_ext):
                 fin = file;
-            pass;
+            pass
             if file.endswith(out_ext):
                 fout = file;
-            pass;
-        pass;
+            pass
+        pass
         if fin is None or fout is None:
             continue;
-        pass;
+        pass
         fin  = os.path.join(folder, fin);
         fout = os.path.join(folder, fout);
         fmy  = os.path.commonprefix([fin, fout]);
@@ -109,7 +109,7 @@ try:
         else:
             ferr = fmy + err_ext;
             fmy += my_ext;
-        pass;
+        pass
 
         with open(fin) as ffin, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
             if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr).returncode != 0:
@@ -119,68 +119,68 @@ try:
                     break;
                 else:
                     continue;
-                pass;
-            pass;
-        pass;
+                pass
+            pass
+        pass
 
         count += 1;
         if using_time_sleep:
             time.sleep(time_sleep_time);
-        pass;
+        pass
 
         with open(fmy) as ffmy, open(fout) as ffout:
             tmy = ffmy.read(); tout = ffout.read(); 
             print(tmy.strip() == tout.strip(), fin, sep='\t');
             if tmy.strip() == tout.strip():
                 correct += 1;
-            pass;
-        pass;
+            pass
+        pass
         
         if run_only_one_test:
             break;
-        pass;
-    pass;
+        pass
+    pass
 except:
     print("Error");
     print("current state: ");
     try:
         print(f"{args=}");
     except NameError:
-        pass;
-    pass;
+        pass
+    pass
     try:
         print(f"{exe=}");
     except NameError:
-        pass;
-    pass;
+        pass
+    pass
     try:
         print(f"{test=}");
     except NameError:
-        pass;
-    pass;
+        pass
+    pass
     try:
         print(f"{folder=}");
     except NameError:
-        pass;
-    pass;
+        pass
+    pass
     try:
         print(f"{fin=}");
     except NameError:
-        pass;
-    pass;
+        pass
+    pass
     try:
         print(f"{fout=}");
     except NameError:
-        pass;
-    pass;
+        pass
+    pass
     raise;
 else:
     print();
     print(f"correct {correct}/{count}");
     if count == 1:
         print("Careful! You ran only one test");
-    pass;
+    pass
     if couldnt_execute != 0:
         print(f"failed execution {couldnt_execute} files");
-    pass;
-pass;
+    pass
+pass
