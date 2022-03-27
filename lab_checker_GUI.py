@@ -238,7 +238,7 @@ class RunTests:
 				window.update();
 				with open(fin) as ffin, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
 					try:
-						if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr, cwd=cwd, shell=True, timeout=timeout.get()).returncode != 0:
+						if subprocess.run(args, stdin=ffin, stdout=ffmy, stderr=fferr, cwd=cwd, timeout=timeout.get()).returncode != 0:
 							print("couldn't execute, see", ferr, end='\n');
 							couldnt_execute += 1;
 							if run_only_one_test.get():

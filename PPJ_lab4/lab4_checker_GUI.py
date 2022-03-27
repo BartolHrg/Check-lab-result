@@ -250,7 +250,7 @@ class RunTests:
 				window.update();
 				with open(fin) as ffin, open(ffrisc, 'w') as fffrisc, open(fmy, 'w') as ffmy, open(ferr, 'w') as fferr:
 					try:
-						if subprocess.run(args, stdin=ffin, stdout=fffrisc, stderr=fferr, cwd=cwd, shell=True, timeout=timeout.get()).returncode != 0:
+						if subprocess.run(args, stdin=ffin, stdout=fffrisc, stderr=fferr, cwd=cwd, timeout=timeout.get()).returncode != 0:
 							print("couldn't compile, see", ferr);
 							couldnt_execute += 1;
 							if run_only_one_test.get():
@@ -259,7 +259,7 @@ class RunTests:
 								continue;
 							pass
 						pass
-						if subprocess.run([path_to_node, path_to_main_js, ffrisc], stdout=ffmy, stderr=fferr, cwd=cwd, shell=True, timeout=timeout.get()).returncode != 1: # main.js uvijek vraća 1?
+						if subprocess.run([path_to_node, path_to_main_js, ffrisc], stdout=ffmy, stderr=fferr, cwd=cwd, timeout=timeout.get()).returncode != 1: # main.js uvijek vraća 1?
 							print("couldn't execute, see", ferr);
 							couldnt_execute += 1;
 							if run_only_one_test.get():
