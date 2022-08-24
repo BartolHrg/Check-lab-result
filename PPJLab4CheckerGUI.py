@@ -17,7 +17,7 @@ class PPJLab4CheckerGUI(LabCheckerGUI):
 	pass
 	def defFileSelectors(self):
 		super().defFileSelectors();
-		self.file_selectors_data.append(("node.js", False, "path to node.js or just node.js if it is on the PATH", config["defaults"]["node.js"]));
+		self.file_selectors_data.append(("node.js", False, "path to node.exe or just node if it is on the PATH", config["defaults"]["node.js"]));
 		self.file_selectors_data.append(("main.js", False, "path to main.js that is used to run frisc",            config["defaults"]["main.js"]));
 	pass
 
@@ -80,4 +80,3 @@ if __name__ == '__main__':
 
 	print('Py==' * 20)
 pass
-# C:/Personal/nastava/4. semestar/Uvod u teoriju računarstva/lab/lab1/SimEnka.py
