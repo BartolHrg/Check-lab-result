@@ -1,0 +1,26 @@
+{
+    "defaults": {
+        "test folder": "./examples/test",
+        "program": "./examples/exe/prog.exe",
+        "lang": ".exe",
+        "extensions": {
+            "input": ".in",
+            "expected": ".out",
+            "output": ".my",
+            "error": ".err",
+            "frisc": ".frisc"
+        },
+        "timeout": 10.0,
+        "delay": {
+            "use": false,
+            "amount": 0.5
+        },
+        "run one": false,
+        "node.js": "node",
+        "main.js": "C:/Personal/nastava/5. semestar/Prevodjenje programskih jezika/lab/lab 4/main.js"
+    },
+    "window dimensions": "1100x600",
+    "warn about single test": true,
+    "use tkinter mainloop": true,
+    "scroll with output": true
+}

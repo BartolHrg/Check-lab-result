@@ -1,0 +1,9 @@
+works with .java option if .in and .out files are in the same folder as Prog.java
+workarounds:
+	in LabCheckerGUI.py in class LabCheckerGUI in function test
+		when calling self.callCommand,
+		first argument in calling os.path.dirname
+		replace `filegroup["input"]` with `self.program_var.get()`
+		maybe, idk, didn't test, don't care
+	use jar
+	use script

@@ -1,0 +1,11 @@
+java.nio.file.FileSystemException: ProgBroken.jar: The process cannot access the file because it is being used by another process.
+
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:92)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileCopy.move(WindowsFileCopy.java:384)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.move(WindowsFileSystemProvider.java:292)
+	at java.base/java.nio.file.Files.move(Files.java:1424)
+	at jdk.jartool/sun.tools.jar.Main.validateAndClose(Main.java:466)
+	at jdk.jartool/sun.tools.jar.Main.run(Main.java:349)
+	at jdk.jartool/sun.tools.jar.Main.main(Main.java:1681)
