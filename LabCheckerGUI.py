@@ -284,4 +284,3 @@ if __name__ == '__main__':
 
 	print('Py==' * 20)
 pass
-# C:/Personal/nastava/4. semestar/Uvod u teoriju računarstva/lab/lab1/SimEnka.py

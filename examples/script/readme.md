@@ -2,7 +2,7 @@
 You have a lot of freedom with script  
 For example you can compile your program (if needed)  
 Like with makefile.  
-But you shouldn't write to stdout (because there will your program write)  
+But you shouldn't write to stdout (because will your program write there)  
 You could write to stderr.  
 
 Anyway, I will demonstrate how to first make jar and then run it.  
