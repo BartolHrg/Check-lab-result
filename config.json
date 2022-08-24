@@ -22,5 +22,6 @@
     "window dimensions": "1100x600",
     "warn about single test": true,
     "use tkinter mainloop": true,
-    "scroll with output": true
+    "scroll with output": true,
+    "version": "17.0"
 }
