@@ -159,7 +159,7 @@ class LabCheckerGUI(Tester):
 		self.test_dir = os.path.abspath(self.test_dir);
 		self.args = self.language_chooser.get_cmd([self.exe]);
 		if self.args is None: raise BreakTest;
-		self.print(f"running {self.exe}", f"on test folder {self.test}", start='░'*150+'\n', sep='\n', end='\n'+'_'*150+'\n'); 
+		self.print(f"running {self.exe}", f"on test folder {self.test_dir}", start='░'*150+'\n', sep='\n', end='\n'+'_'*150+'\n'); 
 	pass
 	
 	def getFileExtensions(self):
