@@ -62,6 +62,10 @@ class Tester:
 			(open(err_filename, "w") if err_filename is not None else contextlib.nullcontext(None)) as err_file  \
 		:
 			try:
+				creation_flags = 0;
+				if os.name == "nt": 
+					creation_flags |= subprocess.CREATE_NO_WINDOW;
+				pass
 				return subprocess.run(
 					args, 
 					stdin=in_file, 
@@ -69,7 +73,7 @@ class Tester:
 					stderr=err_file, 
 					cwd=cwd, 
 					timeout=timeout, 
-					creationflags=subprocess.CREATE_NO_WINDOW
+					creationflags=creation_flags
 				).returncode;
 			except subprocess.TimeoutExpired:
 				return "timeout";
@@ -119,10 +123,11 @@ class Tester:
 		self.print('░'*150, '█'*150, sep='\n', end='\n');
 		self.correct = self.incorrect = self.timeouted = self.couldnt_execute = 0;
 	pass
-	def stop(self): self.should_stop = True;
+	def stop(self): self.should_stop = True;	
 
 	def main(self: Tester):
 		try:
+			self.should_stop = False;
 			self.start();
 
 			for file_group in self.test_files:

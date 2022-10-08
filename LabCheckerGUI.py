@@ -22,7 +22,7 @@ class LabCheckerGUI(Tester):
 	def init(self):
 		self.window = window = MainWindow();
 		window.init();
-		window.title = self.__class__.__name__ + config["version"];
+		window.title = self.__class__.__name__ + " " + config["version"];
 		config_frame = window.config_frame;
 		
 		

@@ -23,5 +23,5 @@
     "warn about single test": true,
     "use tkinter mainloop": true,
     "scroll with output": true,
-    "version": "17.0"
+    "version": "17.1"
 }
